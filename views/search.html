@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="icon" type="image/png" href="https://i.ibb.co/x1wfjLs/melisuggest-star.png" />
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha256-L/W5Wfqfa0sdBNIKN9cG6QA5F2qx4qICmU2VgLruv9Y=" crossorigin="anonymous" />
+        <!-- Font Awesome CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <meta name="theme-color" content="#1AE1A6" />
+        <title>A pesquisa por "{{ query }}" encontrou {{ suggests.length }} palavras-chave únicas - melisuggest</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-light bg-light">
+            <div class="d-flex flex-grow-1">
+                <a href="/" class="navbar-brand btn btn-light"><i class="fas fa-arrow-left"></i></a>
+                <div class="mr-2 my-auto w-100 d-inline-block order-1">
+                    <div class="input-group">
+                        <input type="text" class="form-control border border-right-0" id="keywordsearch" placeholder="Digite uma palavra-chave e pressione enter" maxlength="120" autofocus="" autocapitalize="off" autocorrect="off" spellcheck="false" value="{{ query }}" autocomplete="off" tabindex="2">
+                        <span class="input-group-append">
+                            <button id="keywordsearch" class="btn btn-outline-light border border-left-0" type="button">
+                                <i class="fas fa-search"></i> <span class="d-none d-sm-inline">Buscar</span>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>    
+        </nav>
+        <div class="container mt-3">
+            <div class="row justify-content-md-center">
+                <div class="col-md-auto">
+                    <h5 class="text-center">A PESQUISA POR "{{ query }}" ENCONTROU {{ suggests.length }} PALAVRAS-CHAVE ÚNICAS</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="accordion" id="accordionExample">
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <div class="mb-0 text-center">
+                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <i class="fas fa-key"></i> Principais Palavras ({{ suggests.keywords_length }}) <i class="fas fa-sort-down"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="text-center">#</th>
+                                                <th scope="col" class="text-center">Palavra-Chave</th>
+                                                <th scope="col" class="text-center">Quantidades</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% set numKeys = 1 %}
+                                            {% asyncEach keywords in suggests.keywordsjs %}
+                                            <tr>
+                                                <th scope="row">{{ numKeys }}</th>
+                                                <td class="text-center">{{ keywords.keyword }}</td>
+                                                <td class="text-center">{{ keywords.length }}</td>
+                                            </tr>
+                                            {% set numKeys = numKeys + 1 %}
+                                            {% endeach %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <table class="table table-sm-responsive table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Palavra-Chave</th>
+                                <th scope="col" class="text-center" colspan="4">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set numitems = 1 %}
+                            {% asyncEach suggestion in suggests.suggestion %}
+                            <tr>
+                                <th scope="row">{{ numitems }}</th>
+                                <td>{{ suggestion.query }}</td>
+                                <td class="buttons"><a href="http://www.mercadolivre.com.br/jm/search?as_word={{ suggestion.query }}" alt="{{ suggestion.query }} no Mercado Livre Brasil" title="{{ suggestion.query }} no Mercado Livre Brasil" type="button" class="btn btn-warning btn-sm text-white" target="_blank"><i class="fas fa-store"></i> <span class="d-none d-sm-inline">Ver Anúncios</span></a></td>
+                                <td class="buttons"><button id="openAnalyze" alt="Análise da keyword {{ suggestion.query }}" title=" Análise da keyword {{ suggestion.query }}" type="button" data-query="{{ suggestion.query }}" class="btn btn-primary btn-sm text-white"><i class="fas fa-chart-bar"></i> <span class="d-none d-sm-inline">Análise</span></button></td>
+                                <td class="buttons"><button id="clipboardJS" data-clipboard-action="copy" data-clipboard-text="{{ suggestion.query }}" alt="Copiar {{ suggestion.query }}" title="Copiar {{ suggestion.query }}" type="button" class="btn btn-info btn-sm text-white" data-toggle="tooltip" data-placement="top" title="Tooltip on top"><i class="fas fa-copy"></i> <span class="d-none d-sm-inline">Copiar</span></button></td>
+                                <td class="buttons"><a id="wordsearch" class="btn btn-primary btn-sm" href="http://localhost:3000/search?q={{ suggestion.query }}" alt="Buscar por {{ suggestion.query }}" title="Buscar por {{ suggestion.query }}" ><i class="fas fa-search"></i> <span class="d-none d-sm-inline">Buscar</span></a></td>
+                            </tr>
+                            {% set numitems = numitems + 1 %}
+                            {% endeach %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal fade bd-example-modal-lg" id="moreInformation" tabindex="-1" role="dialog" aria-labelledby="moreInformationLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="moreInformationLabel">Análise da Palavra-chave: <strong class="query"></strong></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="d-flex justify-content-center">
+                                <div id="loading" class="d-block">
+                                    <img src="https://i.ibb.co/4NLb46f/1-9-EBHIOzh-E1-Xf-MYo-Kz1-Jcs-Q.gif" style="width: 100%;">
+                                </div>
+                            </div>
+                            <div id="load" class="d-none">
+                                <div class="alert alert-secondary" role="alert">Essa palavra-chave tem <strong class="results">0</strong> resultados.</br>
+                                    <strong>Anuncios:</strong></br>
+                                    Sem Juros: <strong class="interestFree">0</strong></br>
+                                    Com Juros: <strong class="withInterest">0</strong></br>
+                                    MercadoLider: <strong class="platinum">0</strong></br>
+                                    Loja Oficial: <strong class="storeOfficial">0</strong></br>
+                                    Full: <strong class="fulFillment">0</strong></br>
+                                    Catalogo: <strong class="catalog">0</strong>+
+                                </div>
+                                <div class="accordion mb-3" id="accordionExample">
+                                    <div class="card">
+                                        <div class="card-header" id="headingOne">
+                                            <div class="mb-0 text-center">
+                                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                    <i class="fas fa-map-marker-alt"></i> Localização dos Sellers
+                                                </button>
+                                            </div>
+                                        </div>                    
+                                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <canvas id="localChart"></canvas>
+                                                <table class="table local">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th>Estados</th>
+                                                            <th>Quantidades</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>                    
+                                </div>
+                                <table class="table results">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Titulos</th>
+                                            <th scope="col">Vendedores</th>
+                                            <th scope="col">Preços</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <p class="mt-5 mb-3 text-muted text-center">melisuggest &copy; - feito com todo o meu <i class="fas fa-heart"></i> e <i class="fas fa-coffee"></i>.</p>
+            </div>
+        </div>        
+        <!-- Optional Style -->      
+        <style type="text/css" rel="stylesheet">
+            button#keywordsearch, a#wordsearch {
+                background: #1AE1A6;
+                border-color: #1AE1A6;
+            }
+            i.fas.fa-sort-down {
+                font-size: 20px;
+            }
+            .moneyPrice {
+                display: inline;
+            }
+            td.title > a{
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            table.results {
+                height: 350px;
+            }
+            @media (max-width: 767px) {
+                table td.buttons {
+                    padding-left: 1px;
+                    padding-right: 1px;
+                }
+            }
+        </style>
+        <!-- Optional JavaScript -->
+        <script type="text/javascript">           
+            var randomColorGenerator = function () { 
+                return '#' + (Math.random().toString(16) + '0000000').slice(2, 8); 
+            };
+            function formatReal(int){
+                var tmp = int+'';
+                tmp = tmp.replace(/([0-9]{2})$/g, ",$1");
+                if( tmp.length > 6 )
+                        tmp = tmp.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+                return tmp;
+            };
+            $(function () {
+                var ctx = document.getElementById('localChart').getContext('2d');
+                
+                $('input#keywordsearch').on('keypress', function(e) {
+					var code = e.keyCode || e.which;
+                    if (code == 13) {
+                        $('button#keywordsearch').trigger('click');
+                    }
+                });
+                $('button#keywordsearch').click(function(){
+                    var ksearch = $('input#keywordsearch').val();
+                    location.href = '/search?q='+encodeURIComponent(ksearch)+'&type=suggests'
+                });
+                var clipboard = new ClipboardJS('#clipboardJS');
+                clipboard.on('success', function(e) {
+                    $(e.trigger).addClass('btn-dark').removeClass('btn-info').html('<i class="fas fa-copy"></i><span class="d-none d-sm-inline"> Copiado!</span>');
+                    setInterval(() => {
+                        $(e.trigger).tooltip('hide');
+                        $(e.trigger).removeClass('btn-dark').addClass('btn-info').html('<i class="fas fa-copy"></i> <span class="d-none d-sm-inline">Copiar</span>');
+                    }, 1500);
+                    e.clearSelection();
+                });
+                $('div#moreInformation button.close').click(function(){
+                    $('#moreInformationLabel> strong.query').text('');
+                    $('div#load').toggleClass('d-block').toggleClass('d-none');
+                    $('div#loading').toggleClass('d-none').toggleClass('d-block');
+                });
+                $('button#openAnalyze').click(function(){
+                    var query = $(this).data('query');
+                    $('#moreInformationLabel> strong.query').text('"'+query+'"');
+                    $('div#moreInformation').modal({
+                        keyboard: false
+                    }); 
+                    $.ajax({
+                        type: "get",
+                        cache: true,
+                        contentType: "application/json; charset=utf-8", 
+                        url: "http://localhost:3000/url?q=https://invers.us/melihacking/api/items/search?query="+encodeURIComponent(query)+"&site=MLB&category=all&language=pt-BR&filter=relevance",
+                        success: function (result) {
+                            var obj = result;
+                            $('div#load').toggleClass('d-block').toggleClass('d-none');
+                            $('div#loading').toggleClass('d-none').toggleClass('d-block');
+                            $('strong.results').text(obj.paging.total);
+                            $('strong.platinum').text(obj.filters.power_seller[0].results);
+                            $('strong.storeOfficial').text(obj.filters.official_store[0].results);
+                            $('strong.fulFillment').text(obj.filters.fulfillment[0].results);
+                            $('strong.catalog').text(obj.filters.catalog[0].results);                            
+                            var withInterest = parseInt(obj.paging.total) - parseInt(obj.filters.premium[0].results);
+                            $('strong.interestFree').text(obj.filters.premium[0].results);
+                            $('strong.withInterest').text(withInterest);                            
+                            $.each(obj.results, function(i, field){
+                                var t = i+1;
+                                var price = field.price.toString();
+                                if(price.length==3) {
+                                    price = field.price + '00';
+                                }
+                                price = price.replace(".", "");
+                                $(".table.results > tbody").append(`
+                                    <tr>
+                                        <th scope="row">`+t+`</th>
+                                        <td class="title"><a href="`+field.href+`" alt="Ver anúncio `+field.title_real+`" title="Ver anúncio `+field.title_real+`" target="_blank">`+field.title+`</a></td>
+                                        <td><a href="https://www.mercadolivre.com.br/perfil/`+field.seller_nickname+`" alt="Ver perfil `+field.seller_nickname+`" title="Ver perfil `+field.seller_nickname+`" target="_blank">`+field.seller_nickname+`</a></td>   
+                                        <td>R$ `+formatReal(price)+`</td>                                       
+                                    </tr>
+                                `);
+                            });
+                            var localDataName = [];
+                            var localLabelsTotal = [];
+                            var localBackgroundColorTotal = [];
+                            $.each(obj.filters.state, function(i, field) {
+                                var t = i+1;
+                                if(field.results>2) {
+                                    localDataName.push(field.name);
+                                    localLabelsTotal.push(field.results);
+                                    localBackgroundColorTotal.push(randomColorGenerator());
+                                }
+                                $(".table.local > tbody").append(`
+                                    <tr> 
+                                        <th scope="row">`+t+`</th>
+                                        <th scope="row">`+field.name+`</th>
+                                        <td>`+field.results+`</td>
+                                    </tr>
+                                `);
+                            });
+                            var data = {
+                                datasets: [{
+                                    data: localLabelsTotal,
+                                    backgroundColor: localBackgroundColorTotal,
+                                    label: 'Localizações'
+                                }],
+                                labels: localDataName
+                            };
+                            var localPieChart = new Chart(ctx, {
+                                type: 'pie',
+                                data: data,
+                                options: {
+                                    legend: {
+                                        display: true,
+                                        labels: {
+                                            fontColor: 'rgb(255, 99, 132)'
+                                        }
+                                    }
+                                }
+                            });
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    });
+                });                
+                $('[data-toggle="tooltip"]').tooltip();
+                // if ($(window).width() < 767) {
+                //     $('table.table.table-hover').addClass('table-responsive');
+                //     $('input#keywordsearch').css('width', '80%');
+                // }
+            });
+        </script> 
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha256-WqU1JavFxSAMcLP2WIOI+GB2zWmShMI82mTpLDcqFUg=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
+    </body>
+</html>
