@@ -4,7 +4,7 @@
   "description": "melisuggest - Ferramenta de palavras-chave para Mercado Livre (GRÁTIS)",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -e js,html,nj,json,env index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
