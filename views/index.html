@@ -76,7 +76,7 @@
                 });
                 $('button#keywordsearch').click(function(){
                     var ksearch = $('input#keywordsearch').val();
-                    location.href = '/search?q='+encodeURIComponent(ksearch)+'&type=suggests'
+                    location.href = '{{ app.url }}:{{ app.port }}/search?q='+encodeURIComponent(ksearch)+'&type=suggests'
                 });
             });
         </script>        

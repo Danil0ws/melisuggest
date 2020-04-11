@@ -30,6 +30,6 @@ consign({
   .then('routes')
   .into(app);
     
-app.listen(process.env.APP_PORT, () => {
-  console.log("Sing like no one is listening...!");
+  app.listen(process.env.APP_PORT, () => {
+    console.log("Sing like no one is listening...!");
 });

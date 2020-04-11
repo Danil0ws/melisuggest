@@ -7,6 +7,7 @@ const adapter = new FileSync('./db/db.json');
 const db = low(adapter);
 
 module.exports = app => {
+    let apps = {'url': process.env.APP_URL, 'port':process.env.APP_PORT};
     app.get('/search', function (req, res) {
         let q = req.query.q;      
         app.controllers.search.getSuggests(q)
@@ -15,7 +16,7 @@ module.exports = app => {
                 db.get('search')
                     .push({ id: shortid.generate(), query: q, date: moment().format()})
                     .write()
-                    res.render('search.html', { query: q , suggests: response.data});
+                    res.render('search.html', { query: q, suggests: response.data, app: apps});
             }
             else {
                 res.redirect('/?q='+q+'&status=error');
