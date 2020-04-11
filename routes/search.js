@@ -7,7 +7,7 @@ const adapter = new FileSync('./db/db.json');
 const db = low(adapter);
 
 module.exports = app => {
-    let apps = {'url': process.env.APP_URL, 'port':process.env.APP_PORT};
+    let apps = {'url':process.env.APP_URL,'port':process.env.APP_PORT,'all':process.env.APP_URL_PORT};
     app.get('/search', function (req, res) {
         let q = req.query.q;      
         app.controllers.search.getSuggests(q)

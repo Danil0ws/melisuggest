@@ -93,7 +93,7 @@
                                 <td class="buttons"><a href="http://www.mercadolivre.com.br/jm/search?as_word={{ suggestion.query }}" alt="{{ suggestion.query }} no Mercado Livre Brasil" title="{{ suggestion.query }} no Mercado Livre Brasil" type="button" class="btn btn-warning btn-sm text-white" target="_blank"><i class="fas fa-store"></i> <span class="d-none d-sm-inline">Ver Anúncios</span></a></td>
                                 <td class="buttons"><button id="openAnalyze" alt="Análise da keyword {{ suggestion.query }}" title=" Análise da keyword {{ suggestion.query }}" type="button" data-query="{{ suggestion.query }}" class="btn btn-primary btn-sm text-white"><i class="fas fa-chart-bar"></i> <span class="d-none d-sm-inline">Análise</span></button></td>
                                 <td class="buttons"><button id="clipboardJS" data-clipboard-action="copy" data-clipboard-text="{{ suggestion.query }}" alt="Copiar {{ suggestion.query }}" title="Copiar {{ suggestion.query }}" type="button" class="btn btn-info btn-sm text-white" data-toggle="tooltip" data-placement="top" title="Tooltip on top"><i class="fas fa-copy"></i> <span class="d-none d-sm-inline">Copiar</span></button></td>
-                                <td class="buttons"><a id="wordsearch" class="btn btn-primary btn-sm" href="{{ app.url }}:{{ app.port }}/search?q={{ suggestion.query }}" alt="Buscar por {{ suggestion.query }}" title="Buscar por {{ suggestion.query }}" ><i class="fas fa-search"></i> <span class="d-none d-sm-inline">Buscar</span></a></td>
+                                <td class="buttons"><a id="wordsearch" class="btn btn-primary btn-sm" href="{{ app.all}}/search?q={{ suggestion.query }}" alt="Buscar por {{ suggestion.query }}" title="Buscar por {{ suggestion.query }}" ><i class="fas fa-search"></i> <span class="d-none d-sm-inline">Buscar</span></a></td>
                             </tr>
                             {% set numitems = numitems + 1 %}
                             {% endeach %}
@@ -249,7 +249,7 @@
                         type: "get",
                         cache: true,
                         contentType: "application/json; charset=utf-8", 
-                        url: "{{ app.url }}:{{ app.port }}/url?q=https://invers.us/melihacking/api/items/search?query="+encodeURIComponent(query)+"&site=MLB&category=all&language=pt-BR&filter=relevance",
+                        url: "{{ app.all}}/url?q=https://invers.us/melihacking/api/items/search?query="+encodeURIComponent(query)+"&site=MLB&category=all&language=pt-BR&filter=relevance",
                         success: function (result) {
                             var obj = result;
                             $('div#load').toggleClass('d-block').toggleClass('d-none');
